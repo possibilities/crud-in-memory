@@ -11,9 +11,9 @@ When developing small CRUD apps it's useful to have a simple abstraction over da
 ### Usage
 
 ```
-import inMemoryDatabase from 'crud-mysql'
+import configureDatabase from 'crud-mysql'
 
-const database = inMemoryDatabase()
+const database = configureDatabase()
 const userTable = database.table('users')
 ```
 
