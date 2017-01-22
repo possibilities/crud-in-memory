@@ -17,7 +17,7 @@
     "prepublish": "npm run build",
     "test": "ava",
     "test:watch": "npm test -- --watch",
-    "lint": "standard test.js src",
+    "lint": "standard",
     "pretest": "npm run lint"
   },
   "files": [
