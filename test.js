@@ -6,7 +6,7 @@ import inMemoryDatabase from './index'
 
 const database = inMemoryDatabase()
 
-test.serial('create adds item', async t => {
+test.serial('`create` adds item', async t => {
   const fooTable = database.table('foo')
 
   const initialFoos = await fooTable.read({ moof: 1 })
@@ -21,7 +21,7 @@ test.serial('create adds item', async t => {
   t.deepEqual(foos[0].doof, 'yes')
 })
 
-test.serial('update changes fields', async t => {
+test.serial('`update` changes fields', async t => {
   const fooTable = database.table('foo')
 
   await fooTable.create({ moof: 1 })
@@ -31,7 +31,7 @@ test.serial('update changes fields', async t => {
   t.deepEqual(foos[0].doof, 'yes')
 })
 
-test.serial('delete removes an item', async t => {
+test.serial('`delete` removes an item', async t => {
   const fooTable = database.table('foo')
 
   await fooTable.create({ moof: 1 })
@@ -47,7 +47,7 @@ test.serial('delete removes an item', async t => {
   t.deepEqual(foosAfter.map(f => f.moof), [1, 2])
 })
 
-test.serial('empty query returns all items', async t => {
+test.serial('`read` returns all items when empty', async t => {
   const fooTable = database.table('foo')
 
   await fooTable.create({ moof: 1 })
@@ -58,7 +58,7 @@ test.serial('empty query returns all items', async t => {
   t.deepEqual(foos.map(f => f.moof), [1, 2, 3])
 })
 
-test.serial('query returns matching items', async t => {
+test.serial('`read` returns matching items', async t => {
   const fooTable = database.table('foo')
 
   await fooTable.create({ moof: 1, doof: 'no' })
@@ -69,7 +69,7 @@ test.serial('query returns matching items', async t => {
   t.deepEqual(foos.map(f => f.moof), [2, 3])
 })
 
-test.serial('query returns matching items with specified fields', async t => {
+test.serial('`read` returns matching items with specified fields', async t => {
   const fooTable = database.table('foo')
 
   await fooTable.create({ moof: 1, doof: 'no' })
