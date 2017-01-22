@@ -10,7 +10,6 @@
     "type": "git"
   },
   "author": "Mike Bannister <mikebannister@gmail.com>",
-  "main": "lib/entry.js",
   "license": "MIT",
   "scripts": {
     "build": "babel src --out-dir lib",
@@ -20,9 +19,8 @@
     "lint": "standard",
     "pretest": "npm run lint"
   },
-  "files": [
-    "lib"
-  ],
+  "main": "lib/entry.js",
+  "files": ["lib"],
   "devDependencies": {
     "ava": "^0.17.0",
     "babel-cli": "^6.22.2",
