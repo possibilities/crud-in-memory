@@ -1,7 +1,7 @@
 {
   "name": "crud-in-memory",
   "description": "CRUD interface for in-memory data",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "node": ">=6"
   },
@@ -20,7 +20,9 @@
     "lint": "standard index.js test.js",
     "pretest": "npm run lint"
   },
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "devDependencies": {
     "ava": "^0.17.0",
     "babel-cli": "^6.22.2",
