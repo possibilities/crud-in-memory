@@ -1,7 +1,7 @@
 {
   "name": "crud-in-memory",
   "description": "CRUD interface for in-memory data",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "node": ">=6"
   },
