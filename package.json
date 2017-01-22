@@ -24,12 +24,14 @@
     "ava": "^0.17.0",
     "babel-cli": "^6.22.2",
     "babel-eslint": "^7.1.1",
+    "babel-plugin-transform-runtime": "^6.22.0",
     "babel-preset-latest": "^6.22.0",
     "babel-preset-stage-0": "^6.22.0",
     "babel-register": "^6.22.0",
     "standard": "^8.6.0"
   },
   "dependencies": {
+    "babel-runtime": "^6.22.0",
     "lodash.filter": "^4.6.0",
     "lodash.find": "^4.6.0",
     "lodash.pick": "^4.4.0",
@@ -45,6 +47,12 @@
     "presets": [
       "latest",
       "stage-0"
+    ],
+    "plugins": [
+      ["transform-runtime", {
+        "polyfill": false,
+        "regenerator": true
+      }]
     ]
   }
 }
