@@ -53,4 +53,4 @@ const database = config => {
   return { table }
 }
 
-module.exports = database
+export default database

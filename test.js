@@ -1,5 +1,5 @@
 import test from 'ava'
-import inMemoryDatabase from './index'
+import inMemoryDatabase from './src/index'
 
 const database = inMemoryDatabase()
 

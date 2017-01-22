@@ -13,11 +13,11 @@
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf lib && mkdir -p lib && babel index.js > lib/index.js",
+    "build": "babel src --out-dir lib",
     "prepublish": "npm run build",
     "test": "ava",
     "test:watch": "npm test -- --watch",
-    "lint": "standard index.js test.js",
+    "lint": "standard test.js src",
     "pretest": "npm run lint"
   },
   "files": [
