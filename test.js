@@ -9,78 +9,78 @@ const database = inMemoryDatabase()
 test.serial('`create` adds item', async t => {
   const fooTable = database.table('foo')
 
-  const initialFoos = await fooTable.read({ moof: 1 })
+  const initialFoos = await fooTable.read({ bar: 1 })
   t.deepEqual(initialFoos.length, 0)
 
-  await fooTable.create({ moof: 1, doof: 'yes' })
+  await fooTable.create({ bar: 1, baz: 'yes' })
 
-  const foos = await fooTable.read({ moof: 1 })
+  const foos = await fooTable.read({ bar: 1 })
   t.deepEqual(foos.length, 1)
 
-  t.deepEqual(foos[0].moof, 1)
-  t.deepEqual(foos[0].doof, 'yes')
+  t.deepEqual(foos[0].bar, 1)
+  t.deepEqual(foos[0].baz, 'yes')
 })
 
 test.serial('`update` changes fields', async t => {
   const fooTable = database.table('foo')
 
-  await fooTable.create({ moof: 1 })
-  await fooTable.update({ moof: 1 }, { doof: 'yes' })
+  await fooTable.create({ bar: 1 })
+  await fooTable.update({ bar: 1 }, { baz: 'yes' })
 
-  const foos = await fooTable.read({ moof: 1 })
-  t.deepEqual(foos[0].doof, 'yes')
+  const foos = await fooTable.read({ bar: 1 })
+  t.deepEqual(foos[0].baz, 'yes')
 })
 
 test.serial('`delete` removes an item', async t => {
   const fooTable = database.table('foo')
 
-  await fooTable.create({ moof: 1 })
-  await fooTable.create({ moof: 2 })
-  await fooTable.create({ moof: 3 })
+  await fooTable.create({ bar: 1 })
+  await fooTable.create({ bar: 2 })
+  await fooTable.create({ bar: 3 })
 
   const foosBefore = await fooTable.read()
-  t.deepEqual(foosBefore.map(f => f.moof), [1, 2, 3])
+  t.deepEqual(foosBefore.map(f => f.bar), [1, 2, 3])
 
-  await fooTable.delete({ moof: 3 })
+  await fooTable.delete({ bar: 3 })
 
   const foosAfter = await fooTable.read()
-  t.deepEqual(foosAfter.map(f => f.moof), [1, 2])
+  t.deepEqual(foosAfter.map(f => f.bar), [1, 2])
 })
 
 test.serial('`read` returns all items when empty', async t => {
   const fooTable = database.table('foo')
 
-  await fooTable.create({ moof: 1 })
-  await fooTable.create({ moof: 2 })
-  await fooTable.create({ moof: 3 })
+  await fooTable.create({ bar: 1 })
+  await fooTable.create({ bar: 2 })
+  await fooTable.create({ bar: 3 })
 
   const foos = await fooTable.read()
-  t.deepEqual(foos.map(f => f.moof), [1, 2, 3])
+  t.deepEqual(foos.map(f => f.bar), [1, 2, 3])
 })
 
 test.serial('`read` returns matching items', async t => {
   const fooTable = database.table('foo')
 
-  await fooTable.create({ moof: 1, doof: 'no' })
-  await fooTable.create({ moof: 2, doof: 'yes' })
-  await fooTable.create({ moof: 3, doof: 'yes' })
+  await fooTable.create({ bar: 1, baz: 'no' })
+  await fooTable.create({ bar: 2, baz: 'yes' })
+  await fooTable.create({ bar: 3, baz: 'yes' })
 
-  const foos = await fooTable.read({ doof: 'yes' })
-  t.deepEqual(foos.map(f => f.moof), [2, 3])
+  const foos = await fooTable.read({ baz: 'yes' })
+  t.deepEqual(foos.map(f => f.bar), [2, 3])
 })
 
 test.serial('`read` returns matching items with specified fields', async t => {
   const fooTable = database.table('foo')
 
-  await fooTable.create({ moof: 1, doof: 'no' })
-  await fooTable.create({ moof: 2, doof: 'yes' })
-  await fooTable.create({ moof: 3, doof: 'yes' })
+  await fooTable.create({ bar: 1, baz: 'no' })
+  await fooTable.create({ bar: 2, baz: 'yes' })
+  await fooTable.create({ bar: 3, baz: 'yes' })
 
-  const foosWithMoof = await fooTable.read({ doof: 'yes' }, ['moof'])
-  t.deepEqual(Object.keys(foosWithMoof[0]), ['moof'])
-  t.deepEqual(Object.keys(foosWithMoof[1]), ['moof'])
+  const foosWithBar = await fooTable.read({ baz: 'yes' }, ['bar'])
+  t.deepEqual(Object.keys(foosWithBar[0]), ['bar'])
+  t.deepEqual(Object.keys(foosWithBar[1]), ['bar'])
 
-  const foosWithDoof = await fooTable.read({ doof: 'yes' }, ['doof'])
-  t.deepEqual(Object.keys(foosWithDoof[0]), ['doof'])
-  t.deepEqual(Object.keys(foosWithDoof[1]), ['doof'])
+  const foosWithBaz = await fooTable.read({ baz: 'yes' }, ['baz'])
+  t.deepEqual(Object.keys(foosWithBaz[0]), ['baz'])
+  t.deepEqual(Object.keys(foosWithBaz[1]), ['baz'])
 })
