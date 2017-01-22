@@ -1,7 +1,7 @@
 {
   "name": "crud-in-memory",
   "description": "CRUD interface for in-memory data",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "node": ">=6"
   },
@@ -49,10 +49,13 @@
       "stage-0"
     ],
     "plugins": [
-      ["transform-runtime", {
-        "polyfill": false,
-        "regenerator": true
-      }]
+      [
+        "transform-runtime",
+        {
+          "polyfill": false,
+          "regenerator": true
+        }
+      ]
     ]
   }
 }
