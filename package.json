@@ -10,7 +10,7 @@
     "type": "git"
   },
   "author": "Mike Bannister <mikebannister@gmail.com>",
-  "main": "lib/index.js",
+  "main": "lib/entry.js",
   "license": "MIT",
   "scripts": {
     "build": "babel src --out-dir lib",
