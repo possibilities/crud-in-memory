@@ -15,30 +15,44 @@ import inMemoryDatabase from 'crud-mysql'
 
 const database = inMemoryDatabase()
 const userTable = database.table('users')
+```
 
-// create row
+#### Creates
 
+```
 await userTable.create({ id: 1, username: 'possibilities' })
 await userTable.create({ id: 2, username: 'thrivingkings' })
+```
 
-// read all rows
+#### Reads
 
-const usernames = userTable.read().map(u => u.username)
+Read all rows
+
+```
+const users = await userTable.read()
+const usernames = users.map(u => u.username)
 console.info(usernames) //-> ['possibilities', 'thrivingkings']
+```
 
-// fetch certain rows
+Fetch certain rows
 
-const { username } = userTable.read({ id: 1 }).pop()
+```
+const users = await userTable.read({ id: 1 })
+const { username } = users.pop()
 console.info(username) //-> possibilities
+```
 
-// update row
+#### Updates
 
+```
 const { country } = await userTable.update({ id: 1, country: 'denmark' })
 console.info(country) //-> denmark
+```
 
-// delete row
+#### Deletion
 
-const deleted = await userTable.delete({ id: 1 })
+```
+await userTable.delete({ id: 1 })
 const users = userTable.read({ id: 1 })
 console.info(users.length) //-> 0
 ```
