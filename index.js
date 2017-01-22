@@ -24,17 +24,21 @@ const database = config => {
       }
     }
 
-    const update = (query, item) => {
-      const currentItem = find(data[tableName])
-      const currentItemIndex = data[tableName].indexOf(currentItem)
-      const updatedItem = Object.assign({}, currentItem, item, {
+    const update = (query, nextItem) => {
+      const previousItem = find(data[tableName])
+      const previousItemIndex = data[tableName].indexOf(previousItem)
+      const updatedItem = {
+        ...previousItem,
+        ...nextItem,
         updatedAt: new Date()
-      })
+      }
+
       data[tableName] = [
-        ...data[tableName].slice(0, currentItemIndex),
+        ...data[tableName].slice(0, previousItemIndex),
         updatedItem,
-        ...data[tableName].slice(currentItemIndex)
+        ...data[tableName].slice(previousItemIndex)
       ]
+
       return Promise.resolve(updatedItem)
     }
 

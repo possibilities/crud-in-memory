@@ -1,2 +1,4 @@
 node_modules
-transpiled-index.js
+dist
+*.log
+lib
