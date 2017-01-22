@@ -1,7 +1,7 @@
 {
   "name": "crud-in-memory",
   "description": "CRUD interface for in-memory data",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "node": ">=6"
   },
@@ -42,6 +42,9 @@
     "babel": "inherit"
   },
   "babel": {
-    "presets": ["latest", "stage-0"]
+    "presets": [
+      "latest",
+      "stage-0"
+    ]
   }
 }
