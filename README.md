@@ -1,5 +1,7 @@
 # CRUD in-memory
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/possibilities/crud-in-memory.svg)](https://greenkeeper.io/)
+
 CRUD interface for in-memory data
 
 [![CircleCI](https://circleci.com/gh/possibilities/crud-in-memory.svg?style=svg)](https://circleci.com/gh/possibilities/crud-in-memory)
