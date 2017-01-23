@@ -4,7 +4,7 @@ import filter from 'lodash.filter'
 import reject from 'lodash.reject'
 
 const inMemoryDatabase = (config, data = {}) => {
-  const database = async (queryFn, options = { shouldRunWithTransaction: false }) => {
+  const database = async queryFn => {
     const query = {}
 
     query.create = (tableName, item) => {
@@ -46,8 +46,6 @@ const inMemoryDatabase = (config, data = {}) => {
       data[tableName] = reject(data[tableName], where)
       return Promise.resolve()
     }
-
-    const { shouldRunWithTransaction } = options
 
     try {
       await queryFn(query)
