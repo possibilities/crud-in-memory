@@ -3,20 +3,20 @@ import find from 'lodash.find'
 import filter from 'lodash.filter'
 import reject from 'lodash.reject'
 
-const database = config => {
-  const table = tableName => {
-    const data = {}
+const inMemoryDatabase = (config, data = {}) => {
+  const database = async (queryFn, options = { shouldRunWithTransaction: false }) => {
+    const query = {}
 
-    // Make the table if it doesn't exist
-    data[tableName] = data[tableName] || []
+    query.create = (tableName, item) => {
+      // Make the table if it doesn't exist
+      data[tableName] = data[tableName] || []
 
-    const create = (item) => {
       data[tableName].push(item)
       return Promise.resolve(item)
     }
 
-    const read = (query, fields = []) => {
-      const results = filter(data[tableName], query)
+    query.read = (tableName, where, fields = []) => {
+      const results = filter(data[tableName], where)
       if (fields.length) {
         return Promise.resolve(results.map(result => pick(result, fields)))
       } else {
@@ -24,8 +24,8 @@ const database = config => {
       }
     }
 
-    const update = (query, nextItem) => {
-      const previousItem = find(data[tableName])
+    query.update = async (tableName, where, nextItem) => {
+      const previousItem = find(data[tableName], where)
       const previousItemIndex = data[tableName].indexOf(previousItem)
       const updatedItem = {
         ...previousItem,
@@ -42,15 +42,23 @@ const database = config => {
       return Promise.resolve(updatedItem)
     }
 
-    const del = (query) => {
-      data[tableName] = reject(data[tableName], query)
+    query.delete = async (tableName, where) => {
+      data[tableName] = reject(data[tableName], where)
       return Promise.resolve()
     }
 
-    return { create, read, update, delete: del }
+    const { shouldRunWithTransaction } = options
+
+    try {
+      await queryFn(query)
+    } catch (error) {
+      console.error(error.message)
+    }
+
+    return Promise.resolve()
   }
 
-  return { table }
+  return database
 }
 
-export default database
+export default inMemoryDatabase

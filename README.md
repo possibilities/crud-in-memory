@@ -20,8 +20,10 @@ const userTable = database.table('users')
 #### Creates
 
 ```
-await userTable.create({ id: 1, username: 'possibilities' })
-await userTable.create({ id: 2, username: 'thrivingkings' })
+await database(async query => {
+  await query.create('users', { id: 1, username: 'possibilities' })
+  await query.create('users', { id: 2, username: 'thrivingkings' })
+})
 ```
 
 #### Reads
@@ -29,32 +31,40 @@ await userTable.create({ id: 2, username: 'thrivingkings' })
 Read all rows
 
 ```
-const users = await userTable.read()
-const usernames = users.map(u => u.username)
-console.info(usernames) //-> ['possibilities', 'thrivingkings']
+await database(async query => {
+  const users = await query.read('users')
+  const usernames = users.map(u => u.username)
+  console.info(usernames) //-> ['possibilities', 'thrivingkings']
+})
 ```
 
 Fetch certain rows
 
 ```
-const users = await userTable.read({ id: 1 })
-const { username } = users.pop()
-console.info(username) //-> possibilities
+await database(async query => {
+  const users = await query.read('users', { id: 1 })
+  const { username } = users.pop()
+  console.info(username) //-> possibilities
+})
 ```
 
 #### Updates
 
 ```
-const { country } = await userTable.update({ id: 1, country: 'denmark' })
-console.info(country) //-> denmark
+await database(async query => {
+  const { country } = await query.update('users', { id: 1, country: 'denmark' })
+  console.info(country) //-> denmark
+})
 ```
 
 #### Deletion
 
 ```
-await userTable.delete({ id: 1 })
-const users = userTable.read({ id: 1 })
-console.info(users.length) //-> 0
+await database(async query => {
+  await query.delete('users', { id: 1 })
+  const users = query.read('users', { id: 1 })
+  console.info(users.length) //-> 0
+})
 ```
 
 ### Other backends

@@ -1,83 +1,112 @@
 import test from 'ava'
 import inMemoryDatabase from './src/index'
 
-const database = inMemoryDatabase()
+let database = inMemoryDatabase()
+
+test.beforeEach(async t => {
+  database = inMemoryDatabase()
+})
 
 test.serial('`create` adds item', async t => {
-  const fooTable = database.table('foo')
+  await database(async query => {
+    const initialUsers = await query.read('users', { username: 'possibilities' })
+    t.deepEqual(initialUsers.length, 0)
 
-  const initialFoos = await fooTable.read({ bar: 1 })
-  t.deepEqual(initialFoos.length, 0)
+    await query.create('users', {
+      username: 'possibilities',
+      country: 'denmark'
+    })
 
-  await fooTable.create({ bar: 1, baz: 'yes' })
+    const users = await query.read('users', { username: 'possibilities' })
+    t.deepEqual(users.length, 1)
 
-  const foos = await fooTable.read({ bar: 1 })
-  t.deepEqual(foos.length, 1)
-
-  t.deepEqual(foos[0].bar, 1)
-  t.deepEqual(foos[0].baz, 'yes')
+    t.deepEqual(users[0].username, 'possibilities')
+    t.deepEqual(users[0].country, 'denmark')
+  })
 })
 
 test.serial('`update` changes fields', async t => {
-  const fooTable = database.table('foo')
-
-  await fooTable.create({ bar: 1 })
-  await fooTable.update({ bar: 1 }, { baz: 'yes' })
-
-  const foos = await fooTable.read({ bar: 1 })
-  t.deepEqual(foos[0].baz, 'yes')
+  await database(async query => {
+    await query.create('users', { username: 'possibilities' })
+    await query.update(
+      'users',
+      { username: 'possibilities' },
+      { country: 'denmark' }
+    )
+    const users = await query.read('users', { username: 'possibilities' })
+    t.deepEqual(users[0].country, 'denmark')
+  })
 })
 
 test.serial('`delete` removes an item', async t => {
-  const fooTable = database.table('foo')
+  await database(async query => {
+    await query.create('users', { username: 'possibilities' })
+    await query.create('users', { username: 'thrivingkings' })
+    await query.create('users', { username: 'rjz' })
 
-  await fooTable.create({ bar: 1 })
-  await fooTable.create({ bar: 2 })
-  await fooTable.create({ bar: 3 })
+    const usersBefore = await query.read('users')
+    t.deepEqual(usersBefore.map(f => f.username), [
+      'possibilities',
+      'thrivingkings',
+      'rjz'
+    ])
 
-  const foosBefore = await fooTable.read()
-  t.deepEqual(foosBefore.map(f => f.bar), [1, 2, 3])
+    await query.delete('users', { username: 'possibilities' })
 
-  await fooTable.delete({ bar: 3 })
-
-  const foosAfter = await fooTable.read()
-  t.deepEqual(foosAfter.map(f => f.bar), [1, 2])
+    const usersAfter = await query.read('users')
+    t.deepEqual(usersAfter.map(f => f.username), [
+      'thrivingkings',
+      'rjz'
+    ])
+  })
 })
 
 test.serial('`read` returns all items when empty', async t => {
-  const fooTable = database.table('foo')
+  await database(async query => {
+    await query.create('users', { username: 'possibilities' })
+    await query.create('users', { username: 'thrivingkings' })
+    await query.create('users', { username: 'rjz' })
 
-  await fooTable.create({ bar: 1 })
-  await fooTable.create({ bar: 2 })
-  await fooTable.create({ bar: 3 })
-
-  const foos = await fooTable.read()
-  t.deepEqual(foos.map(f => f.bar), [1, 2, 3])
+    const users = await query.read('users')
+    t.deepEqual(users.map(f => f.username), [
+      'possibilities',
+      'thrivingkings',
+      'rjz'
+    ])
+  })
 })
 
 test.serial('`read` returns matching items', async t => {
-  const fooTable = database.table('foo')
+  await database(async query => {
+    await query.create('users', { username: 'possibilities', country: 'iceland' })
+    await query.create('users', { username: 'thrivingkings', country: 'denmark' })
+    await query.create('users', { username: 'rjz', country: 'denmark' })
 
-  await fooTable.create({ bar: 1, baz: 'no' })
-  await fooTable.create({ bar: 2, baz: 'yes' })
-  await fooTable.create({ bar: 3, baz: 'yes' })
-
-  const foos = await fooTable.read({ baz: 'yes' })
-  t.deepEqual(foos.map(f => f.bar), [2, 3])
+    const users = await query.read('users', { country: 'denmark' })
+    t.deepEqual(users.map(f => f.username), ['thrivingkings', 'rjz'])
+  })
 })
 
 test.serial('`read` returns matching items with specified fields', async t => {
-  const fooTable = database.table('foo')
+  await database(async query => {
+    await query.create('users', { username: 'possibilities', country: 'iceland' })
+    await query.create('users', { username: 'thrivingkings', country: 'denmark' })
+    await query.create('users', { username: 'rjz', country: 'denmark' })
 
-  await fooTable.create({ bar: 1, baz: 'no' })
-  await fooTable.create({ bar: 2, baz: 'yes' })
-  await fooTable.create({ bar: 3, baz: 'yes' })
+    const usersWithUsername = await query.read(
+      'users',
+      { country: 'denmark' },
+      ['username']
+    )
+    t.deepEqual(Object.keys(usersWithUsername[0]), ['username'])
+    t.deepEqual(Object.keys(usersWithUsername[1]), ['username'])
 
-  const foosWithBar = await fooTable.read({ baz: 'yes' }, ['bar'])
-  t.deepEqual(Object.keys(foosWithBar[0]), ['bar'])
-  t.deepEqual(Object.keys(foosWithBar[1]), ['bar'])
-
-  const foosWithBaz = await fooTable.read({ baz: 'yes' }, ['baz'])
-  t.deepEqual(Object.keys(foosWithBaz[0]), ['baz'])
-  t.deepEqual(Object.keys(foosWithBaz[1]), ['baz'])
+    const usersWithCountry = await query.read(
+      'users',
+      { country: 'denmark' },
+      ['country']
+    )
+    t.deepEqual(Object.keys(usersWithCountry[0]), ['country'])
+    t.deepEqual(Object.keys(usersWithCountry[1]), ['country'])
+  })
 })
